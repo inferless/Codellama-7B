@@ -8,7 +8,7 @@ from io import BytesIO
 
 class InferlessPythonModel:
   def initialize(self):
-      self.generator = pipeline("text-generation", model="codellama/CodeLlama-34b-Python-hf")
+      self.generator = pipeline("text-generation", model="codellama/CodeLlama-34b-Python-hf", device_map="auto")
 
   def infer(self, inputs):
     prompt = inputs["prompt"]
