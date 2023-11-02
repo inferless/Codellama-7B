@@ -8,12 +8,12 @@ from io import BytesIO
 
 class InferlessPythonModel:
   def initialize(self):
-      self.generator = pipeline("text-generation", model="codellama/CodeLlama-34b-Python-hf", device_map="auto")
+      self.generator = pipeline("text-generation", model="codellama/CodeLlama-34b-Python-hf", device_map="auto", max_new_tokens=100)
 
   def infer(self, inputs):
     prompt = inputs["prompt"]
     pipeline_output = self.generator(prompt)
-    return {"generated_result": pipeline_output}
+    return {"generated_result": pipeline_output[0]["generated_text"]}
 
   def finalize(self,args):
     self.generator = None
