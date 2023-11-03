@@ -5,3 +5,4 @@ build:
   python_packages:
     - "git+https://github.com/huggingface/transformers.git@main"
     - "accelerate"
+    - "auto-gptq==0.3.2"
