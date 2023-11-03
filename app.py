@@ -1,19 +1,30 @@
 import json
 import numpy as np
 import torch
-from transformers import pipeline
+from transformers import AutoTokenizer
+from auto_gptq import AutoGPTQForCausalLM
 import base64
 from io import BytesIO
 
 
 class InferlessPythonModel:
   def initialize(self):
-      self.generator = pipeline("text-generation", model="codellama/CodeLlama-34b-Python-hf", device_map="auto", max_new_tokens=100)
+      self.tokenizer = AutoTokenizer.from_pretrained("TheBloke/CodeLlama-34B-Python-GPTQ", use_fast=True)
+      self.model = AutoGPTQForCausalLM.from_quantized(
+        "TheBloke/CodeLlama-34B-Python-GPTQ",
+        use_safetensors=True,
+        device="cuda:0",
+        quantize_config=None,
+        inject_fused_attention=False
+      )
 
   def infer(self, inputs):
     prompt = inputs["prompt"]
-    pipeline_output = self.generator(prompt)
-    return {"generated_result": pipeline_output[0]["generated_text"]}
+    input_ids = self.tokenizer(prompt, return_tensors='pt').input_ids.cuda()
+    output = self.model.generate(inputs=input_ids, temperature=0.7, max_new_tokens=512)
+    result = self.tokenizer.decode(output[0])
+    return {"generated_result": result}
 
   def finalize(self,args):
-    self.generator = None
+    self.tokenizer = None
+    self.model = None
