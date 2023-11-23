@@ -3,6 +3,7 @@ build:
   system_packages:
     - "libssl-dev"
   python_packages:
-    - "git+https://github.com/huggingface/transformers.git@main"
+    - "transformers"
     - "accelerate"
     - "auto-gptq"
+    - "setuptools"
