@@ -5,4 +5,4 @@ build:
   python_packages:
     - "transformers"
     - "accelerate"
-    - "git+https://github.com/chu-tianxiang/vllm-gptq.git"
+    - "vllm"

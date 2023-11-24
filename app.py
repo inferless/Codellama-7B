@@ -10,13 +10,13 @@ class InferlessPythonModel:
         USER: {}
         ASSISTANT: """
         snapshot_download(
-            "TheBloke/CodeLlama-34B-Python-GPTQ",
+            "TheBloke/CodeLlama-34B-Python-AWQ",
             local_dir="/model",
             token="<<your_token>>",
         )
         self.llm = LLM(
           model="/model",
-          quantization="gptq")
+          quantization="awq")
     
     def infer(self, inputs):
         print("inputs[prompt] -->", inputs["prompt"], flush=True)
