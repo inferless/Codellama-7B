@@ -16,7 +16,8 @@ class InferlessPythonModel:
         )
         self.llm = LLM(
           model="/model",
-          quantization="awq")
+          quantization="awq",
+          dtype="float16")
     
     def infer(self, inputs):
         print("inputs[prompt] -->", inputs["prompt"], flush=True)
