@@ -10,7 +10,7 @@ class InferlessPythonModel:
         USER: {}
         ASSISTANT: """
         snapshot_download(
-            "TheBloke/CodeLlama-34B-Python-AWQ",
+            "TheBloke/CodeLlama-7B-Python-AWQ",
             local_dir="/model",
             token="<<your_token>>",
         )
