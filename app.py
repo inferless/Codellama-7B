@@ -26,7 +26,7 @@ class InferlessPythonModel:
         sampling_params = SamplingParams(
             temperature=1.0,
             top_p=1,
-            max_tokens=512
+            max_tokens=100
         )
         result = self.llm.generate(prompts, sampling_params)
         result_output = [output.outputs[0].text for output in result]
