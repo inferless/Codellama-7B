@@ -1,37 +1,39 @@
-import os
-from vllm import SamplingParams
-from vllm import LLM
+from vllm import LLM, SamplingParams
 from huggingface_hub import snapshot_download
-
+from pathlib import Path
 
 class InferlessPythonModel:
     def initialize(self):
-        self.template = """SYSTEM: You are a helpful assistant.
-        USER: {}
-        ASSISTANT: """
+        repo_id = "codellama/CodeLlama-7b-Python-hf"  # Specify the model repository ID
+        # HF_TOKEN = os.getenv("HF_TOKEN")  # Access Hugging Face token from environment variable
+        volume_nfs = "/var/nfs-mount/common_llm"  # Define nfs volume for fast cold-start
+        model_dir = f"{volume_nfs}/{repo_id}"  # Construct model directory path
+        model_dir_path = Path(model_dir)  # Convert path to Path object
+
+        # Create the model directory if it doesn't exist
+        if not model_dir_path.exists():
+            model_dir_path.mkdir(exist_ok=True, parents=True)
+
+        # Download the model snapshot from Hugging Face Hub
         snapshot_download(
-            "TheBloke/CodeLlama-7B-Python-AWQ",
-            local_dir="/model",
-            token="<<your_token>>",
+            repo_id,
+            local_dir=model_dir
+            # token=HF_TOKEN  # Provide token if necessary
         )
-        self.llm = LLM(
-          model="/model",
-          quantization="awq",
-          dtype="float16")
-    
-    def infer(self, inputs):
-        print("inputs[prompt] -->", inputs["prompt"], flush=True)
-        prompts = inputs["prompt"]
-        print("Prompts -->", prompts, flush=True)
-        sampling_params = SamplingParams(
-            temperature=1.0,
-            top_p=1,
-            max_tokens=100
-        )
-        result = self.llm.generate(prompts, sampling_params)
+        # Define sampling parameters for model generation
+        self.sampling_params = SamplingParams(temperature=0.7, top_p=0.95, max_tokens=256)
+
+        # Initialize the LLM object
+        self.llm = LLM(model=model_dir)
+        
+    def infer(self,inputs):
+        prompts = inputs["prompt"]  # Extract the prompt from the input
+        result = self.llm.generate(prompts, self.sampling_params)
+        # Extract the generated text from the result
         result_output = [output.outputs[0].text for output in result]
 
-        return {"result": result_output[0]}
+        # Return a dictionary containing the result
+        return {'result': result_output[0]}
 
-    def finalize(self, args):
+    def finalize(self):
         pass
