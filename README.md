@@ -1,5 +1,8 @@
-# Codellama - 7b with AWQ
+# Codellama - 7B
 Code Llama is a collection of pretrained and fine-tuned generative text models ranging in scale from 7 billion to 34 billion parameters. This is the repository for the 7B Python specialist version. This model is designed for general code synthesis and understanding. 
+## Deploy Codellama - 7B using Inferless:
+- Deployment of Codellama - 7B model using [vLLM](https://github.com/vllm-project/vllm).
+- By using the vLLM, you can expect an average latency of 2.09 sec.
 
 ---
 ## Prerequisites
@@ -59,7 +62,7 @@ The following is a sample Input and Output JSON for this model which you can use
       "data": [
         "data"
       ],
-      "name": "generated_result",
+      "name": "result",
       "shape": [
         1
       ],
